@@ -181,10 +181,10 @@ export default function LandingPage() {
               variants={fadeInUp}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-slate-900"
             >
-              Analisis Biometrik Kulit
+              Inovasi Teknologi Medis:
               <br />
               <span className="text-emerald-600">
-                Canggih di Ujung Jari Anda
+                Transformasi Digital dalam Perawatan Luka Diabetes
               </span>
             </motion.h1>
             
@@ -192,8 +192,7 @@ export default function LandingPage() {
               variants={fadeInUp}
               className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto"
             >
-              Solusi IoT terintegrasi untuk pemantauan kesehatan kulit, stres, 
-              dan faktor lingkungan secara real-time menggunakan sensor biometrik presisi tinggi.
+              Solusi IoT terintegrasi untuk memantau suhu, tingkat pH, dan kondisi lingkungan pada area luka penderita diabetes guna mendukung proses penyembuhan yang lebih terukur.
             </motion.p>
 
             <motion.div 
