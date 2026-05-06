@@ -19,6 +19,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { AuthModal } from "@/components/landing/auth-modal"
 import { DeviceStatusIndicator } from "@/components/landing/device-status"
+// IMPORT HELPER BLUETOOTH
+import { connectBluetooth } from "@/helpers/bluetooth"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -81,13 +83,24 @@ export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
+  // LOGIKA KONEKSI BLUETOOTH
+  const handleConnect = async () => {
+    const char = await connectBluetooth();
+    if (char) {
+      // Jika berhasil connect, arahkan ke dashboard
+      window.location.href = "/dashboard";
+    } else {
+      // Opsional: tampilkan toast error jika gagal
+      console.log("Gagal menghubungkan perangkat.");
+    }
+  }
+
   const handleGuestAccess = () => {
     window.location.href = "/dashboard"
   }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
-      {/* Device Status Indicator */}
       <DeviceStatusIndicator />
 
       {/* Navbar */}
@@ -99,27 +112,17 @@ export default function LandingPage() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <div className="flex items-center gap-2">
               <div className="relative flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-500">
                 <Activity className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-slate-900">
-                SkinNET Bio
-              </span>
+              <span className="text-xl font-bold text-slate-900">SkinNET Bio</span>
             </div>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
-              <a href="#penelitian" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                Penelitian
-              </a>
-              <a href="#sensor" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                Sensor
-              </a>
-              <a href="#teknologi" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                Teknologi
-              </a>
+              <a href="#penelitian" className="text-slate-600 hover:text-emerald-600 transition-colors">Penelitian</a>
+              <a href="#sensor" className="text-slate-600 hover:text-emerald-600 transition-colors">Sensor</a>
+              <a href="#teknologi" className="text-slate-600 hover:text-emerald-600 transition-colors">Teknologi</a>
               <Button 
                 onClick={() => setIsAuthModalOpen(true)}
                 className="bg-emerald-500 hover:bg-emerald-600 text-white"
@@ -128,7 +131,6 @@ export default function LandingPage() {
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
             <button 
               className="md:hidden text-slate-600"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -137,28 +139,6 @@ export default function LandingPage() {
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t border-slate-200"
-          >
-            <div className="px-4 py-4 space-y-3">
-              <a href="#penelitian" className="block text-slate-600 hover:text-emerald-600 py-2">Penelitian</a>
-              <a href="#sensor" className="block text-slate-600 hover:text-emerald-600 py-2">Sensor</a>
-              <a href="#teknologi" className="block text-slate-600 hover:text-emerald-600 py-2">Teknologi</a>
-              <Button 
-                onClick={() => setIsAuthModalOpen(true)}
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white"
-              >
-                Mulai Sekarang
-              </Button>
-            </div>
-          </motion.div>
-        )}
       </motion.nav>
 
       {/* Hero Section */}
@@ -183,22 +163,17 @@ export default function LandingPage() {
             >
               Inovasi Teknologi Medis:
               <br />
-              <span className="text-emerald-600">
-                Transformasi Digital dalam Perawatan Luka Diabetes
-              </span>
+              <span className="text-emerald-600">Transformasi Digital Perawatan Luka Diabetes</span>
             </motion.h1>
             
             <motion.p 
               variants={fadeInUp}
               className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto"
             >
-              Solusi IoT terintegrasi untuk memantau suhu, tingkat pH, dan kondisi lingkungan pada area luka penderita diabetes guna mendukung proses penyembuhan yang lebih terukur.
+              Solusi IoT terintegrasi untuk memantau suhu, tingkat pH, dan kondisi lingkungan guna mendukung proses penyembuhan yang lebih terukur.
             </motion.p>
 
-            <motion.div 
-              variants={fadeInUp}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button 
                 size="lg"
                 onClick={() => setIsAuthModalOpen(true)}
@@ -220,7 +195,7 @@ export default function LandingPage() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Visual - Dashboard Preview */}
+          {/* Hero Visual */}
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -229,7 +204,6 @@ export default function LandingPage() {
           >
             <div className="relative max-w-4xl mx-auto">
               <div className="relative bg-white rounded-2xl border border-slate-200 shadow-xl p-8 overflow-hidden">
-                {/* Mock Dashboard Preview */}
                 <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
                     { label: "pH Kulit", value: "5.5", unit: "pH", status: "Dalam Rentang" },
@@ -261,150 +235,40 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Research Section */}
-      <section id="penelitian" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="text-emerald-600 text-sm font-medium tracking-wider uppercase">Misi Kami</span>
-              <h2 className="text-3xl sm:text-4xl font-bold mt-2 mb-6 text-slate-900">
-                Menjembatani IoT dan 
-                <span className="text-emerald-600"> Perawatan Dermatologi</span>
-              </h2>
-              <p className="text-slate-600 text-lg leading-relaxed mb-6">
-                Kulit adalah organ terbesar tubuh kita, namun kesehatannya sering diabaikan. SkinNet-Bio menjembatani 
-                kesenjangan antara IoT dan pemantauan dermatologi proaktif, memungkinkan deteksi dini 
-                kondisi kulit dan stresor lingkungan.
-              </p>
-              <p className="text-slate-600 text-lg leading-relaxed">
-                Penelitian kami berfokus pada penginderaan biometrik non-invasif untuk memberikan wawasan kesehatan 
-                berkelanjutan tanpa mengganggu kehidupan sehari-hari Anda.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative"
-            >
-              <div className="relative bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8">
-                {/* Biometric Scan Visual */}
-                <div className="aspect-square relative flex items-center justify-center">
-                  <motion.div 
-                    animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute w-64 h-64 rounded-full bg-emerald-200/50"
-                  />
-                  <motion.div 
-                    animate={{ scale: [1.1, 1, 1.1], opacity: [0.2, 0.4, 0.2] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                    className="absolute w-48 h-48 rounded-full bg-emerald-300/50"
-                  />
-                  <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    className="absolute w-56 h-56 rounded-full border-2 border-emerald-400/30 border-dashed"
-                  />
-                  <div className="relative bg-white rounded-full p-6 shadow-lg">
-                    <Fingerprint className="h-20 w-20 text-emerald-500" />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* Sensors Section */}
       <section id="sensor" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <span className="text-emerald-600 text-sm font-medium tracking-wider uppercase">Teknologi Sensor</span>
-            <h2 className="text-3xl sm:text-4xl font-bold mt-2 text-slate-900">
-              Sensor Biometrik 
-              <span className="text-emerald-600"> Presisi Tinggi</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {sensorCards.map((card, index) => (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-300"
-              >
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${card.iconBg} ${card.iconColor} mb-4`}>
-                  <card.icon className="h-6 w-6" />
-                </div>
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-xl font-semibold text-slate-900">{card.title}</h3>
-                  <span className="px-2 py-0.5 rounded text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200">
-                    {card.sensor}
-                  </span>
-                </div>
-                <p className="text-slate-600">{card.description}</p>
-              </motion.div>
-            ))}
-          </div>
+        <div className="max-w-7xl mx-auto text-center mb-16">
+          <span className="text-emerald-600 text-sm font-medium tracking-wider uppercase">Teknologi Sensor</span>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 text-slate-900">
+            Sensor Biometrik <span className="text-emerald-600">Presisi Tinggi</span>
+          </h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+          {sensorCards.map((card, index) => (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="group bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-300"
+            >
+              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${card.iconBg} ${card.iconColor} mb-4`}>
+                <card.icon className="h-6 w-6" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-xl font-semibold text-slate-900">{card.title}</h3>
+                <span className="px-2 py-0.5 rounded text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200">
+                  {card.sensor}
+                </span>
+              </div>
+              <p className="text-slate-600">{card.description}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* Tech Stack Section */}
-      <section id="teknologi" className="relative py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <span className="text-emerald-600 text-sm font-medium tracking-wider uppercase">Dibangun Dengan</span>
-            <h2 className="text-3xl sm:text-4xl font-bold mt-2 text-slate-900">
-              Teknologi 
-              <span className="text-emerald-600"> Modern</span>
-            </h2>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-4"
-          >
-            {techStack.map((tech, index) => (
-              <motion.div
-                key={tech.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="flex items-center gap-3 px-6 py-4 bg-slate-50 rounded-xl border border-slate-200 hover:border-emerald-300 hover:shadow-sm transition-all"
-              >
-                <span className="text-2xl">{tech.icon}</span>
-                <span className="text-slate-700 font-medium">{tech.name}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
+      {/* CTA Section (Bluetooth Hub) */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div 
@@ -417,16 +281,15 @@ export default function LandingPage() {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500 text-white mb-6">
                 <Cpu className="h-8 w-8" />
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-slate-900">
-                Siap Memantau Kesehatan Kulit Anda?
-              </h2>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-slate-900">Siap Memantau Kesehatan Kulit?</h2>
               <p className="text-slate-600 text-lg mb-8 max-w-xl mx-auto">
-                Hubungkan perangkat ESP32 Anda dan mulai lacak data biometrik Anda secara real-time.
+                Hubungkan perangkat ESP32 Anda dan mulai lacak data biometrik secara real-time.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                {/* TOMBOL YANG SUDAH TERKONEKSI */}
                 <Button 
                   size="lg"
-                  onClick={() => setIsAuthModalOpen(true)}
+                  onClick={handleConnect}
                   className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 shadow-lg shadow-emerald-500/25"
                 >
                   <Bluetooth className="h-5 w-5 mr-2" />
@@ -446,29 +309,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500">
-                <Activity className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-slate-900">SkinNET Bio</span>
-            </div>
-            <p className="text-slate-500 text-sm">
-              © {new Date().getFullYear()} SkinNet-Bio. Analisis Biometrik Kulit Canggih.
-            </p>
-            <div className="flex items-center gap-6">
-              <a href="#" className="text-slate-500 hover:text-emerald-600 text-sm transition-colors">Privasi</a>
-              <a href="#" className="text-slate-500 hover:text-emerald-600 text-sm transition-colors">Syarat</a>
-              <a href="#" className="text-slate-500 hover:text-emerald-600 text-sm transition-colors">Kontak</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* Auth Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   )
