@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button"
 import { AuthModal } from "@/components/landing/auth-modal"
 import { DeviceStatusIndicator } from "@/components/landing/device-status"
 // IMPORT HELPER BLUETOOTH
-import { connectBluetooth } from "@/helpers/bluetooth"
+import { connectBluetooth } from "../helpers/bluetooth"
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
